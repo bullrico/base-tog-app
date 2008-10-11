@@ -1,0 +1,30 @@
+<% include_javascript "/tog_vault/javascripts/admin" %>
+<% include_javascript "/tog_vault/javascripts/ruledtable" %>
+<% include_javascript "/tog_vault/javascripts/pagetree" %>
+<% include_javascript "/tog_vault/javascripts/string" %>
+
+<div class="titleB"><%= I18n.t("tog_vault.page.pages") %></div>
+
+<% unless @homepage -%>
+<p><%= link_to "New homepage", cms_homepage_new_url, {:class=>"button mainaction add", :title => "Add an user"} %></p>
+<% end -%>
+
+<table id="site-map" summary="Page hierarchy of the current site">
+  <thead>
+    <tr>
+      <th scope="col"><%= I18n.t("tog_vault.page.page") %></th>
+      <th scope="col"><%= I18n.t("tog_vault.page.status") %></th>
+      <th scope="col"><%= I18n.t("tog_vault.page.add_child") %></th>
+      <th scope="col"><%= I18n.t("tog_vault.page.remove") %></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% if @homepage %>
+    <%= render_node @homepage -%>
+  <% else -%>
+    <tr>
+      <td colspan="4"><%= I18n.t("tog_vault.page.no_pages") %></td>
+    </tr>
+  <% end -%>
+  </tbody>
+</table>

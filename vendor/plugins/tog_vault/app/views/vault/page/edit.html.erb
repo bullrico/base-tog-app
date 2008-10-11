@@ -1,0 +1,77 @@
+<% include_javascript "/tog_vault/javascripts/fckeditor/fckeditor" %>
+<% include_javascript "/tog_vault/javascripts/admin" %>
+<% include_javascript "/tog_vault/javascripts/string" %>
+
+<script type="text/javascript">
+  window.onload = function() {
+    var oFCKeditor = new FCKeditor( 'page[content]' ) ;
+    oFCKeditor.BasePath = '/tog_vault/javascripts/fckeditor/' ;
+    oFCKeditor.ReplaceTextarea() ;
+  }
+</script>
+
+<% form_for :page, :url => "" , :html => {:id =>"entry"} do |f| %>
+  <div class="titleB">
+  <% if @page.new_record? -%>
+    <%= I18n.t("tog_vault.page.new_page") %>
+  <% else -%>
+    <%= I18n.t("tog_vault.page.edit_page") %>
+  <% end -%>
+    <%= link_to_function 'More', visual_effect(:toggle_slide , 'config'), :class => 'button', :title => "More Options" %>
+  </div>
+  <div id="config" class="fields" style="display:none">
+    <fieldset>
+      <legend>More options</legend>
+      <p>
+        <label for="page_slug"><%= I18n.t("tog_vault.page.slug") %> <span class="helpinfo">Auto-generated</span></label>
+        <%= text_field "page", "slug", :class => "fieldbox wide"%>
+      </p>
+      <p>
+        <label for="page_breadcrumb"><%= I18n.t("tog_vault.page.breadcrumb") %></label>
+        <%= text_field "page", "breadcrumb", :class => "fieldbox wide" %>
+      </p>
+      <p>
+        <label for="page_tag_list"><%= I18n.t("tog_vault.page.tags") %></label>
+        <%= text_field "page", "tag_list", :class => "fieldbox wide" %>
+      </p>
+    </fieldset>
+  </div>
+
+  <fieldset>
+    <legend>Metadata</legend>
+    <div class="fields">
+      <label for="state"><%= I18n.t("tog_vault.page.status") %></label>
+      <%= select_tag "state", %{#{options_for_select(Page.states.inject({}) {|s, e| s[e]=e; s}, @page.new_record? ? :draft : @page.current_state)}} %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Text</legend>
+    <div class="fields">
+      <label for="page_title"><%= I18n.t("tog_vault.page.page_title") %>
+      <%= text_field "page", "title", :class => "fieldbox", :style=>"width:80%" %></label>
+      
+      <%= render :partial => 'part', :locals => { :content => @page } %>
+
+      <%= updated_stamp @page %>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <%= save_model_button(@page, :class=>"button mainaction") %> <%= save_model_and_continue_editing_button(@page, :class=>"button") %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+// <![CDATA[
+  $title = $('page_title');
+  $slug = $('page_slug');
+  $breadcrumb = $('page_breadcrumb');
+  $old_title = $title.value || '';
+  function title_updated() {
+    if ($old_title.toSlug() == $slug.value) $slug.value = $title.value.toSlug();
+    if ($old_title == $breadcrumb.value) $breadcrumb.value = $title.value;
+    $old_title = $title.value;
+  }
+  new Form.Element.Observer('page_title', 0.15, title_updated);
+// ]]>
+</script>
