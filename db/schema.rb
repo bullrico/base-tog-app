@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081011122049) do
+ActiveRecord::Schema.define(:version => 20081011125054) do
 
   create_table "abuses", :force => true do |t|
     t.string   "email"
@@ -27,6 +27,22 @@ ActiveRecord::Schema.define(:version => 20081011122049) do
     t.string   "action"
     t.integer  "item_id"
     t.string   "item_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bloggerships", :force => true do |t|
+    t.integer  "blog_id"
+    t.integer  "user_id"
+    t.string   "rol",        :default => "admin"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blogs", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.integer  "author_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -120,6 +136,16 @@ ActiveRecord::Schema.define(:version => 20081011122049) do
   create_table "plugin_schema_info", :id => false, :force => true do |t|
     t.string  "plugin_name"
     t.integer "version"
+  end
+
+  create_table "posts", :force => true do |t|
+    t.string   "title"
+    t.text     "body"
+    t.integer  "blog_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "state"
   end
 
   create_table "profiles", :force => true do |t|
